@@ -20,7 +20,7 @@ def get_request(endpoint, *kwargs):
         for key,value in kwargs.items():
             params=params.key+"="+value+"&"
         
-    request_url =  backend_ url+endpoints+"?"+params
+    request_url =  backend_url+endpoints+"?"+params
 
     print("GET from {} ".format(request_url))
     try:
