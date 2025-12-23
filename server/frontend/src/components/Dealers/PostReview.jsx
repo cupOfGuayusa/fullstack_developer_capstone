@@ -51,13 +51,14 @@ const PostReview = () => {
     const res = await fetch(review_url, {
       method: "POST",
       headers: {
+
           "Content-Type": "application/json",
       },
       body: jsoninput,
   });
 
   const json = await res.json();
-  if (json.status === 200) {
+  if (res.status === 200) {
       window.location.href = window.location.origin+"/dealer/"+id;
   }
 
