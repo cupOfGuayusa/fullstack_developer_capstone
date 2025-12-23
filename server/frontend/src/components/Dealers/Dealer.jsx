@@ -22,7 +22,7 @@ const Dealer = () => {
   let id =params.id;
   let dealer_url = root_url+`djangoapp/dealer/${id}/`;
   let reviews_url = root_url+`djangoapp/reviews/dealer/${id}/`;
-  let post_review = root_url+`postreview/${id}/`;
+  let post_review = root_url+`postreview/${id}`;
   
   const get_dealer = async ()=>{
     const res = await fetch(dealer_url, {
@@ -77,7 +77,7 @@ return(
       <div class="reviews_panel">
       {reviews.length === 0 && unreviewed === false ? (
         <text>Loading Reviews....</text>
-      ):  unreviewed === true? <div>No reviews yet! </div> :
+      ):  unreviewed === true? <div>No reviews yet</div> :
       reviews.map(review => (
         <div className='review_panel'>
           <img src={senti_icon(review.sentiment)} className="emotion_icon" alt='Sentiment'/>
