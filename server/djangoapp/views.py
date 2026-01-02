@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import logout
 from django.contrib import messages
 from datetime import datetime
-from .restapis import get_request
+from .restapis import get_request, analyze_review_sentiments, post_review
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
 import logging
@@ -15,6 +15,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from .models import CarMake, CarModel
 from .populate import initiate
+
 
 
 # Get an instance of a logger
@@ -68,18 +69,25 @@ def get_dealerships(request, state="All"):
 
         
 def get_dealer_reviews(request, dealer_id):
+    print(f"DEBUG: Getting reviews for dealer_id: {dealer_id}")
+    print(f"DEBUG: dealer_id type: {type(dealer_id)}")
     if (dealer_id):
-        endpoint = f'/fetchReviews/{dealer_id}'
+        endpoint = f'/fetchReviews/dealer/{dealer_id}'
+        print(f"DEBUG: Calling endpoint: {endpoint}")
         reviews = get_request(endpoint)
+        print(f"DEBUG: Reviews returned: {reviews}")
     if reviews is None:
+        [rint(f"DEBUG: Reviews is None: returning empty array")]
         return JsonResponse({"status": 200, "reviews": []})
+        print(f"DEBUG: Processing {len(reviews)} reviews")
     for review_detail in reviews:
         response = analyze_review_sentiments(review_detail['review'])
-        print(response)
+        print(f"DEBUG: Sentiment response: {response}")
         review_detail['sentiment'] = response['sentiment']
-        return JsonResponse({"status":200,"reviews": reviews})
-    else: 
-        return JsonResponse({"status":400, "message": "Bad Request"})
+    print(f"DEBUG: Returning {len(reviews)} reviews")
+    return JsonResponse({"status":200,"reviews": reviews})
+
+    
 # Create a `get_dealer_details` view to render the dealer details
 # def get_dealer_details(request, dealer_id):
 # ...
@@ -99,10 +107,19 @@ def get_dealer_details(request, dealer_id):
 def add_review(request):
     if (request.user.is_anonymous == False):
         data = json.loads(request.body)
+        print(f'"=" * 50')
+        print("ADD_REVIEW VIEW CALLED")
+        print(f"User: {request.user.username}")
+        print(f"Data received: {data}")
+        print(f"=" *50)
         try:
             response = post_review(data)
+            print(f"post_review returned: {response}")
             return JsonResponse({"status":200})
-        except:
+        except Exception as e:
+            print(f"ERROR in add_review: {e}")
+            import traceback
+            traceback.print_exc()
             return JsonResponse({"status":401,"message":"Error in posting review"})
     else:
         return JsonResponse({"status":403, "message": "Unauthorized"})
