@@ -38,7 +38,7 @@ const PostReview = () => {
 
     let jsoninput = JSON.stringify({
       "name": name,
-      "dealership": id,
+      "dealership": parseInt(id),
       "review": review,
       "purchase": true,
       "purchase_date": date,
@@ -57,7 +57,7 @@ const PostReview = () => {
       body: jsoninput,
   });
 
-  const json = await res.json();
+  
   if (res.status === 200) {
       window.location.href = window.location.origin+"/dealer/"+id;
   }
