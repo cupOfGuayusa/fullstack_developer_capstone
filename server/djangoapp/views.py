@@ -30,19 +30,13 @@ def login_user(request):
         # If user is valid, log them in
         login(request, user)
         result = {"userName": username, "status": "Authenticated"}
+
     return JsonResponse(result)
 
-# Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
-
-# Create a `registration` view to handle sign up request
-# @csrf_exempt
-# def registration(request):
-# ...
 
 # Update the `get_dealerships` view to render the index page with a
 # list of dealerships
+
 
 def get_dealerships(request, state="All"):
     if state == "All":
@@ -53,12 +47,12 @@ def get_dealerships(request, state="All"):
     dealerships = get_request(endpoint)
     return JsonResponse({"status": 200, "dealers": dealerships})
 
+
 # Create a `get_dealer_reviews` view to render the reviews of a dealer
 # def get_dealer_reviews(request,dealer_id):
 # ...
 
 
-        
 def get_dealer_reviews(request, dealer_id):
     logger.debug("Getting reviews for dealer_id: %s", dealer_id)
 
@@ -85,10 +79,11 @@ def get_dealer_reviews(request, dealer_id):
     logger.debug("Returning %d reviews", len(reviews))
     return JsonResponse({"status": 200, "reviews": reviews})
 
-    
+
 # Create a `get_dealer_details` view to render the dealer details
 # def get_dealer_details(request, dealer_id):
 # ...
+
 
 def get_dealer_details(request, dealer_id):
     if dealer_id:
@@ -97,9 +92,11 @@ def get_dealer_details(request, dealer_id):
         return JsonResponse({"status": 200, "dealer": dealership})
     return JsonResponse({"status": 400, "message": "Bad Request"})
 
+
 # Create a `add_review` view to submit a review
 # def add_review(request):
 # ...
+
 
 def add_review(request):
     if not request.user.is_anonymous:
@@ -112,7 +109,9 @@ def add_review(request):
             return JsonResponse({"status": 200})
         except Exception as e:
             logger.exception("ERROR in add_review: %s", e)
-            return JsonResponse({"status": 401, "message": "Error in posting review"})
+            return JsonResponse(
+                {"status": 401, "message": "Error in posting review"}
+            )
     return JsonResponse({"status": 403, "message": "Unauthorized"})
 
 
