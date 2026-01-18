@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from .restapis import get_request, analyze_review_sentiments, post_review
 import logging
@@ -13,7 +14,31 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+@csrf_exempt
+def registration(request):
+    data =  json.loads(request.body)
+    username = data['userName']
+    password = data["password"]
+    first_name = data['firstName']
+    last_name = data['lastName']
+    email = data['email']
+    username_exist = False
 
+    try:
+        User.objects.get(username=username)
+        username_exist= True
+    except:
+        logger.debug("{} is new user".format(username))
+
+    if not username_exist:
+        user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, email=email, password=password)
+        login(request, user)
+        data = {"userName":username, "status": "Authenticated"}
+        return JsonResponse(data)
+
+    else :
+        data =  {"userName":username, "error":"Already Registered"}
+        return JsonResponse(data)
 
 # Create a `login_request` view to handle sign in request
 @csrf_exempt
