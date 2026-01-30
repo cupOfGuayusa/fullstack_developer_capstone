@@ -164,7 +164,8 @@ def get_cars(request):
 
     return JsonResponse({"CarModels": cars})
 
+
 @csrf_exempt
 def logout_user(request):
     logout(request)
-    return JsonResponse({"status":"logged_out"})
+    return JsonResponse({"status": "logged_out"})
