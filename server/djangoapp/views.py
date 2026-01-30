@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from .restapis import get_request, analyze_review_sentiments, post_review
@@ -163,3 +163,8 @@ def get_cars(request):
         )
 
     return JsonResponse({"CarModels": cars})
+
+@csrf_exempt
+def logout_user(request):
+    logout(request)
+    return JsonResponse({"status":"logged_out"})
