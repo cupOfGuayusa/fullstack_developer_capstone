@@ -71,7 +71,7 @@ def login_user(request):
 
 def get_dealerships(request, state="All"):
     if state == "All":
-        endpoint = "/fetchDealers"
+        endpoint = "/fetchDealers/"
     else:
         endpoint = "/fetchDealers/" + state
 
@@ -128,7 +128,7 @@ def get_dealer_details(request, dealer_id):
 # def add_review(request):
 # ...
 
-
+@csrf_exempt
 def add_review(request):
     if not request.user.is_anonymous:
         data = json.loads(request.body)
