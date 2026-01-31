@@ -11,7 +11,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [lastName, setlastName] = useState("");
+  const [lastName, setLastName] = useState("");
 
 // Redirect to home
   const gohome = ()=> {
@@ -22,7 +22,7 @@ const Register = () => {
   const register = async (e) => {
     e.preventDefault();
 
-    let register_url = window.location.origin+"/djangoapp/register";
+    let register_url = window.location.origin+"/djangoapp/register/";
 
 // Send POST request to register endpoint
     const res = await fetch(register_url, {
@@ -40,23 +40,25 @@ const Register = () => {
     });
 
     const json = await res.json();
-    if (json.status) {
+    if (json?.status === "Authenticated") {
     // Save username in session and reload home
         sessionStorage.setItem('username', json.userName);
         window.location.href = window.location.origin;
     }
-    else if (json.error === "Already Registered") {
+    else if (json?.error === "Already Registered") {
       alert("The user with same username is already registered");
       window.location.href = window.location.origin;
+    } else {
+        alert("Registration Failed");
     }
 };
 
   return(
     <div className="register_container" style={{width: "50%"}}>
       <div className="header" style={{display: "flex",flexDirection: "row", justifyContent: "space-between"}}>
-          <span className="text" style={{flexGrow:"1"}}>SignUp</span> 
+          <span className="text" style={{flexGrow:"1"}}>Sign Up</span> 
           <div style={{display: "flex",flexDirection: "row", justifySelf: "end", alignSelf: "start" }}>
-          <a href="/" onClick={()=>{gohome()}} style={{justifyContent: "space-between", alignItems:"flex-end"}}>
+          <a href="#" onClick={(event)=>{gohome()}} style={{justifyContent: "space-between", alignItems:"flex-end"}}>
             <img style={{width:"1cm"}} src={close_icon} alt="X"/>
           </a>
           </div>
@@ -76,12 +78,12 @@ const Register = () => {
 
           <div>
             <img src={user_icon} className="img_icon" alt='Last Name'/>
-            <input type="text"  name="last_name" placeholder="Last Name" className="input_field" onChange={(e) => setlastName(e.target.value)}/>
+            <input type="text"  name="last_name" placeholder="Last Name" className="input_field" onChange={(e) => setLastName(e.target.value)}/>
           </div>
 
           <div>
             <img src={email_icon} className="img_icon" alt='Email'/>
-            <input type="email"  name="email" placeholder="email" className="input_field" onChange={(e) => setEmail(e.target.value)}/>
+            <input type="email"  name="email" placeholder="Email" className="input_field" onChange={(e) => setEmail(e.target.value)}/>
           </div>
 
           <div className="input">
@@ -91,7 +93,7 @@ const Register = () => {
 
         </div>
         <div className="submit_panel">
-          <input className="submit" type="submit" value="Register"/>
+          <button className="submit" type="button" value="Register" onClick={register}>Register</button>
         </div>
       </form>
       </div>
